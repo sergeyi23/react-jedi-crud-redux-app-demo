@@ -1,20 +1,18 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import Table from '../common/Table'
-import { useSelector, useDispatch } from 'react-redux';
 import { getAllPeople } from '../../store/selectors/people';
 import { deletePerson, changeBelovedStatus } from '../../store/actions/people';
+import { connect } from 'react-redux'
 
-const PeoplePage = () => {
-    const dispatch = useDispatch();
-    const people = useSelector(state => getAllPeople(state));
-
+const PeoplePage = ({people, dispatchDeletePerson, dispatchChangeBelovedStatus}) => {
+    
     const handleBelovedStatus = id => {
-        dispatch(changeBelovedStatus(id));
+        dispatchChangeBelovedStatus(id);
     }
 
     const handleDelete = (id) => {
-        dispatch(deletePerson(id));
+        dispatchDeletePerson(id);
     }
 
     const getColumns = () => {
@@ -66,4 +64,21 @@ const PeoplePage = () => {
     );
 };
 
-export default PeoplePage;
+const mapStateToProps = state => {
+    return {
+        people: getAllPeople(state)
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        dispatchDeletePerson: id => {
+            dispatch(deletePerson(id));
+        },
+        dispatchChangeBelovedStatus: id => {
+            dispatch(changeBelovedStatus(id));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PeoplePage);

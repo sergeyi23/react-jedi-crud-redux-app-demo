@@ -3,13 +3,15 @@ import {Route, Switch, Redirect} from "react-router-dom";
 
 import './App.css';
 import "bootstrap/dist/css/bootstrap.css";
-import PeoplePage from "./components/pages/PeoplePage";
+import PeoplePage from "./components/pages/PeoplePage2";
 import PlanetsPage from "./components/pages/PlanetsPage";
 import StarshipsPage from "./components/pages/StarshipsPage";
 import PeopleForm from "./components/PeopleForm";
 import Navbar from "./components/Navbar";
 import NotFound from "./components/common/NotFound";
 import {getPeople} from "./services/peopleService";
+import { useDispatch } from 'react-redux';
+import { setPeople } from './store/actions/people';
 
 
 // for intro/learning purposes
@@ -22,12 +24,12 @@ const data = [
 //
 
 function App() {
-    const [people, setPeople] = useState([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function fetchData() {
             const peopleResponse = await getPeople()
-            setPeople(peopleResponse)
+            dispatch(setPeople(peopleResponse));
         }
 
         fetchData()
@@ -39,8 +41,8 @@ function App() {
             <main className="container">
                 <Switch>
                     <Route path="/people/:id" render={props =>
-                        <PeopleForm {...props}  setPeople={setPeople} people={people} />}/>
-                    <Route path="/people" render={props => <PeoplePage {...props} setPeople={setPeople} people={people} />} />
+                        <PeopleForm {...props}  />}/>
+                    <Route path="/people" render={props => <PeoplePage {...props} />} />
                     {/*<Route path="/planets/:id" component={Form}/>*/}
                     <Route path="/planets" component={PlanetsPage}/>
                     {/*<Route path="/starships/:id" component={Form}/>*/}
